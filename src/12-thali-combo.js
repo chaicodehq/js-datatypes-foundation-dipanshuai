@@ -54,16 +54,51 @@
  */
 export function createThaliDescription(thali) {
   // Your code here
+
+  if (Object.prototype.toString.call(thali) !== "[object Object]") return ""
+  if (!thali.name && typeof (thali.name !== "string")) return ""
+  if (!thali.items && !Array.isArray(thali.items)) return ""
+  if (thali.isVeg === undefined) return ""
+  if (thali.price === undefined && typeof (thali.price !== "number")) return ""
+  let type = "Veg"
+  if (!thali.isVeg) type = "Non-Veg"
+  return `${thali.name.toUpperCase()} (${type}) - Items: ${thali.items.join(", ")} - Rs.${thali.price}.00`
 }
 
 export function getThaliStats(thalis) {
   // Your code here
+  if (!Array.isArray(thalis)) return null
+  const totalThalis = thalis.length
+  if (totalThalis === 0) return null
+
+
+  const vegThali = thalis.filter(item => item.isVeg == true)
+  const vegCount = vegThali.length
+
+  const nonVegCount = totalThalis - vegCount
+  const avgPrice = `${thalis.reduce((sum, item) => sum + item.price, 0) / totalThalis}.00`
+
+  const cheapest = Math.min(...thalis.map(item => item.price))
+  const costliest = Math.max(...thalis.map(item => item.price))
+  const names = thalis.map(item => item.name)
+
+
+  return { totalThalis, vegCount, nonVegCount, avgPrice, cheapest, costliest, names }
+
 }
 
 export function searchThaliMenu(thalis, query) {
   // Your code here
+
+  if(!Array.isArray(thalis) || typeof(query) !== "string") return []
+  return thalis.filter(item => (item.name.toLowerCase()).includes(query.toLowerCase()) || item.items.join().toLowerCase().includes(query.toLowerCase()) )
 }
 
 export function generateThaliReceipt(customerName, thalis) {
   // Your code here
+  if(!Array.isArray(thalis) || typeof(customerName) !== "string" || thalis.length === 0) return ""
+  const lineItem = thalis.map(thali => `- ${thali.name} x Rs.${thali.price}`).join("\n")
+  const total = thalis.reduce((acc, item) => item.price + acc, 0)
+  return `THALI RECEIPT\n---\nCustomer: ${customerName.toUpperCase()}\n${lineItem}\n---\nTotal: Rs.${total}.00\nItems: ${thalis.length}`
+
 }
