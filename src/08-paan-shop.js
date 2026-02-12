@@ -47,16 +47,37 @@
  */
 export function createPaanOrder(basePaan, customizations) {
   // Your code here
+  if (Object.prototype.toString.call(basePaan) !== "[object Object]" || basePaan === null) return {}
+  const copy = Object.assign({}, basePaan)
+  if (Object.prototype.toString.call(customizations) != "[object Object]") return copy
+  return Object.assign({}, basePaan, customizations)
 }
 
 export function freezeMenu(menu) {
   // Your code here
+  if (Object.prototype.toString.call(menu) !== "[object Object]" || menu === null) return {}
+  return Object.freeze(menu)
+  
 }
 
 export function updatePrices(menu, increase) {
   // Your code here
+  if (Object.prototype.toString.call(menu) !== "[object Object]" || typeof(increase) !== "number") return {}
+  const menuArray = []
+  Object.entries(menu).forEach(item => {
+    item[1] = item[1] + increase
+    menuArray.push(item)
+  })
+  return Object.fromEntries(menuArray)
+
 }
 
 export function mergeDailySpecials(regularMenu, specialsMenu) {
   // Your code here
+  if (Object.prototype.toString.call(regularMenu) !== "[object Object]") regularMenu = {}
+  if (Object.prototype.toString.call(specialsMenu) !== "[object Object]") specialsMenu = {}
+
+  return {...regularMenu, ...specialsMenu}
+
+
 }
